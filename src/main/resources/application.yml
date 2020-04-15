@@ -46,3 +46,15 @@ logging:
   level:
     org.springframework: info
     com.yorath.booksearch: debug
+
+# Open API Information
+open-api:
+  kakao:
+    app-key: 2fcfd0d6690256bb06d549f1bafb8c73
+    book-search-url: https://dapi.kakao.com/v3/search/book
+  naver:
+    client-id: Dz3nhi0Tz3i_QJDOEF2O
+    client-secret: U6qerTT0GK
+    book-search-url: https://openapi.naver.com/v1/search/book.json
+
+
