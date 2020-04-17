@@ -17,6 +17,7 @@ import java.util.List;
 public class BookSearchResponseDto {
 
     private Meta meta;
+    @Builder.Default
     private List<Documents> documents = new ArrayList<>();
 
     @ToString
@@ -35,6 +36,7 @@ public class BookSearchResponseDto {
     @NoArgsConstructor @AllArgsConstructor
     public static class Documents {
         private String url;
+        @Builder.Default
         private List<String> translators = new ArrayList<>();
         private String title;
         private String thumbnail;
@@ -45,6 +47,7 @@ public class BookSearchResponseDto {
         private String isbn;
         private String datetime;
         private String contents;
+        @Builder.Default
         private List<String> authors = new ArrayList<>();
     }
 

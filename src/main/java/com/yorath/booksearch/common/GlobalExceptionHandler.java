@@ -20,10 +20,10 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<CommonResponseDto> handleServiceException(ServiceException ex) {
+    public ResponseEntity<ApiResponseDto> handleServiceException(ServiceException ex) {
         log.error("ServiceException Occurred - {}", ex.getCode() + "," + ex.getMessage());
 
-        CommonResponseDto errorResponse = new CommonResponseDto();
+        ApiResponseDto errorResponse = new ApiResponseDto();
         errorResponse.setCode(ex.getCode());
         errorResponse.setMessage(ex.getMessage());
 
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResponseDto> handleException(Exception ex) {
+    public ResponseEntity<ApiResponseDto> handleException(Exception ex) {
         log.error("Internal Server Error Exception");
         log.error(ex.getMessage());
 
@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
 
         ex.printStackTrace();
 
-        CommonResponseDto errorResponse = new CommonResponseDto();
-        errorResponse.setCode(CommonResultStatus.ERROR_INTERNAL_SERVER.getCode());
-        errorResponse.setMessage(CommonResultStatus.ERROR_INTERNAL_SERVER.getMessage());
+        ApiResponseDto errorResponse = new ApiResponseDto();
+        errorResponse.setCode(ApiResultStatus.INTERNAL_SERVER_ERROR.getCode());
+        errorResponse.setMessage(ApiResultStatus.INTERNAL_SERVER_ERROR.getMessage());
 
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);

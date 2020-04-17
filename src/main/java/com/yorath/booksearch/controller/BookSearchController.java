@@ -1,6 +1,6 @@
 package com.yorath.booksearch.controller;
 
-import com.yorath.booksearch.common.CommonResponseDto;
+import com.yorath.booksearch.common.ApiResponseDto;
 import com.yorath.booksearch.service.BookSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/api/v1")
 public class BookSearchController {
 
     final BookSearchService kakaoBookSearchService;
@@ -29,10 +29,10 @@ public class BookSearchController {
 
 
     @GetMapping(value = "/search/book")
-    public ResponseEntity<CommonResponseDto> searchBook(@RequestParam(value = "keyword") @NotNull String keyword) {
+    public ResponseEntity<ApiResponseDto> searchBook(@RequestParam(value = "keyword") @NotNull String keyword) {
 
         // Response Data
-        CommonResponseDto responseDto = new CommonResponseDto();
+        ApiResponseDto responseDto = new ApiResponseDto();
 
         try {
             responseDto.setSuccess(kakaoBookSearchService.searchBook(keyword));

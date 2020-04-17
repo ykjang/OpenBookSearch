@@ -1,6 +1,6 @@
 package com.yorath.booksearch.service;
 
-import com.yorath.booksearch.common.CommonResultStatus;
+import com.yorath.booksearch.common.ApiResultStatus;
 import com.yorath.booksearch.dto.BookSearchResponseDto;
 import com.yorath.booksearch.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class KakaoBookSearchServiceImpl implements BookSearchService {
         if (responseEntity.getStatusCode().isError()) {
             log.debug("네이버 책검색 API 호출에 실패앴습니다");
             // TODO: 예외처리
-            throw new ServiceException(CommonResultStatus.ERROR_INTERNAL_SERVER);
+            throw new ServiceException(ApiResultStatus.INTERNAL_SERVER_ERROR);
         }
 
         return responseEntity.getBody();

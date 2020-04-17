@@ -1,15 +1,11 @@
 package com.yorath.booksearch.service;
 
-import com.yorath.booksearch.domain.Members;
-import com.yorath.booksearch.dto.BookSearchResponseDto;
 import com.yorath.booksearch.dto.JoinMemberDto;
-import org.springframework.web.client.RestClientException;
+import com.yorath.booksearch.dto.MemberDto;
 
 import java.util.Optional;
 
 public interface MemberService {
-
-    Optional<Members> findMember(String userId) throws RestClientException;
-
-    Members registMember(JoinMemberDto joinMemberDto);
+    Optional<MemberDto> findMember(String userId);
+    String registMember(JoinMemberDto joinMemberDto);
 }
