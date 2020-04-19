@@ -41,9 +41,9 @@ public class BookSearchResponseDto {
         private String title;
         private String thumbnail;
         private String status;
-        private int sale_price;
+        private double sale_price;
         private String publisher;
-        private int price;
+        private double price;
         private String isbn;
         private String datetime;
         private String contents;

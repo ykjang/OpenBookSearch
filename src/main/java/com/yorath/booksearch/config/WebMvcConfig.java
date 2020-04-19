@@ -3,9 +3,7 @@ package com.yorath.booksearch.config;
 import com.yorath.booksearch.common.ApiCommonInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -18,7 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(new ApiCommonInterceptor())
-                .addPathPatterns("/api/v1/**")
+                .addPathPatterns("/**")
         ;
     }
 
