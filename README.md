@@ -1,6 +1,6 @@
 
 
-# OPEN API 기반 도서검색 어플리케이션 
+# OPEN API 기반 도서검색 API 어플리케이션 
 [![Wercker](https://img.shields.io/badge/spring--boot-2.2.6.RELEASE-green.svg?style=flat-square&logo=spring)](https://spring.io/projects/spring-boot)
 [![Wercker](https://img.shields.io/badge/java-11.0.2-blue.svg?style=flat-square&logo=java)](https://openjdk.java.net/projects/jdk/11/)
 
