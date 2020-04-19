@@ -163,7 +163,11 @@
 
 - API 테스트 방법
 
-  모든 API는 curl 명령어를 통해 테스트가 가능합니다. 
+  - 회원가입 및 로그인 API는 아래의 curl 명령어를 통해 테스트가 가능합니다. 
+  - 책검색, 나의 책검색이력조회, 검색 키워드 TOP10 API는 세션정보가 필요하기 때문에 소스에 있는 `http-api-test.http`파일로 테스트가 가능합니다.
+  - `http-api-test.http` 파일을 활용한 테스트 방법
+    - IntelliJ에서 해당파일을 오픈한뒤, 회원가입 API부터 순서대로 테스트를 진행하면 됩니다. 
+    - 로그인 API를 호출하고 나면, 이후의 호출부터는 서버에서 생성한 SESSIONID값이 자동으로 쿠키헤더에 추가되어 호출하게 됩니다. 
 
   - 회원가입 
 
@@ -185,35 +189,6 @@
     --data-raw '{ "user_id": "testuser1", "password": "password" }'
     ```
 
-  - 책검색 (로그인 필수)
-
-    - userId - 로그인 유저ID
-    - keyword - 자바 
-    - page - 1
-    - size - 20
-
-    ```shell
-    curl --location --request GET 'http://localhost:8081/api/v1/book/search?keyword=%EC%9E%90%EB%B0%94%20&page=1&size=20' \
-    --header 'Content-Type: application/json'
-    ```
-
-  - 나의 책검색 이력조회 (로그인 필수, URL의 회원ID Path는 로그인한 유저ID와 동일해야 함)
-
-    - userId - 로그인 유저ID
-    - 좀더 다양한 이력데이타를 조회하기 위해서는 책검색 API를 다른 키워드로 여러번 수행합니다. 
-
-    ```shell
-    curl --location --request GET 'http://localhost:8081/api/v1/book/search/{userId}/histories' \
-    --header 'Content-Type: application/json' 
-    ```
-
-  - 검색 키워드 Top10 목록 (로그인 필수)
-    - 좀더 다양한 키워드 목록을 조회하기 위해서는 책검색 API를 중복을 포함한 다양한 키워드로 여러번 수행합니다. 
-
-    ```shell
-    curl --location --request GET 'http://localhost:8081/api/v1/book/keyword/top10' \
-    --header 'Content-Type: application/json' 
-    ```
 
 - 공통코드 
 
