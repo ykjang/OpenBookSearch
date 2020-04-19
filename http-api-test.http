@@ -1,0 +1,48 @@
+### 회원가입
+POST http://localhost:8081/api/v1/member
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "user_id": "testuser1",
+  "password": "password"
+}
+
+
+
+### 로그인
+POST http://localhost:8081/api/v1/login
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "user_id": "testuser1",
+  "password": "password"
+}
+
+
+
+### 책검색
+GET http://localhost:8081/api/v1/book/search?keyword=spring
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+
+
+### 나의 책검색 히스토리
+GET http://localhost:8081/api/v1/book/search/testuser1/histories
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+
+
+### 검색 키워드 TOP10
+GET http://localhost:8081/api/v1/book/keyword/top10
+
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
