@@ -8,7 +8,7 @@
 
 #### 어플리케이션 소개
 
-- 본 어플리케이션은 OpenAPI를 활용하여 도서검색 서비스를 제공하는 API 어플리케이션니다. 
+- 본 어플리케이션은 OpenAPI를 활용하여 도서검색 서비스를 제공하는 API 어플리케이션입니다. 
 
 - 어플리케이션에 사용되는 오픈API는 카카오의  책검색 API를 사용합니다.
   - API URL - https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book
@@ -18,8 +18,8 @@
 #### 어플리케이션 개발환경
 
 - JDK: OpenJDK 11.0.2
-- 언어, 프레임워크: SpringBoot 2.2.4
-- Datasource: H2 (In-Memory)
+- 언어,프레임워크: SpringBoot 2.2.6
+- Datasource: H2 (In-Memory Database)
 - ORM - JPA( Hibernate 5)
 - 빌드, 의존성 라이브러리 관리: gradle
 - Test Tool: JUnit5, Mokito
@@ -31,9 +31,7 @@
 - **lombok - 어노테이션기반 자동코드 지원**
 
   - 소스에서 사용되는 setter, getter 메서드 생성, 생성자 메서드 생성들의 작업들은 lombok 기반의 어노테이션을 사용하였습니다.
-
   - 어노테이션 기반으로 코드의 반복작업을 줄여주기 때문에,  코드량이 획기적으로 줄어들고 가독성도 높아집니다.
-
   - build.gradle 의존성 라이브러리
 
     ```properties
@@ -48,11 +46,8 @@
 - **spring-session - 세션관리**
 
   - spring-session 라이브러리를 사용하면 어플리케이션의 세션정보를 외부저장소인  Redis,MongDB, JDBC(DB)에 저장이 가능합니다. 
-
   - 본 어플리케이션은 로그인 사용자정보를 spring-session JDBC를 통해 기본 데이터소스저장소인 h2에 저장하도록 설정되었습니다.
-
   - 독립적으로 구동될 수 있는 어플리케이션 환경을 위해 별도의 서버구동이 필요한 Redis나 MongoDB는 적용하지 않았습니다. 
-
   - 의존성 라이브러리
 
     ```properties
@@ -78,8 +73,6 @@
     }
     
     ```
-
-  
 
 ------
 
@@ -112,8 +105,17 @@
   $ ./gradlew clean bootJar
   $ java -jar -DSpring.profiles.active=local build/libs/booksearch-0.0.1-SNAPSHOT.jar 
   ```
-
-  
+- 참고사항
+   - H2 DB의 DDL-AUTO 설정이 `CREATE`로 되어 있기 때문에, 어플리케이션을 구동할때마다 DB 스키마가 Drop되고 다시 생성됩니다. 
+   - 최초 구동 후 DB스키마를 유지하고 싶다만 DDL-AUTO 설정을 아래와 같이 `UPDATE`로 변경하면 됩니다. (변경된 스키마만 반영됩니다.)
+  ```java
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: update
+  ```
 
 ------
 
@@ -199,6 +201,7 @@
   - 나의 책검색 이력조회
 
     - userId - testuser1
+    - 좀더 다양한 이력데이타를 조회하기 위해서는 책검색 API를 다른 키워드로 여러번 수행합니다. 
 
     ```shell
     curl --location --request GET 'http://localhost:8081/api/v1/book/search/testuser1/histories' \
@@ -206,6 +209,7 @@
     ```
 
   - 검색 키워드 Top10 목록
+    - 좀더 다양한 키워드 목록을 조회하기 위해서는 책검색 API를 중복을 포함한 다양한 키워드로 여러번 수행합니다. 
 
     ```shell
     curl --location --request GET 'http://localhost:8081/api/v1/book/keyword/top10' \
