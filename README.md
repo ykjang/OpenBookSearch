@@ -1,12 +1,11 @@
 
 
-### OPEN API 기반 도서검색 어플리케이션 
+# OPEN API 기반 도서검색 어플리케이션 
+[![Wercker](https://img.shields.io/badge/spring--boot-2.2.6.RELEASE-green.svg?style=flat-square&logo=spring)](https://spring.io/projects/spring-boot)
+[![Wercker](https://img.shields.io/badge/java-11.0.2-blue.svg?style=flat-square&logo=java)](https://openjdk.java.net/projects/jdk/11/)
 
-------
 
-
-
-#### 어플리케이션 소개
+## 어플리케이션 소개
 
 - 본 어플리케이션은 OpenAPI를 활용하여 도서검색 서비스를 제공하는 API 어플리케이션입니다. 
 
@@ -15,7 +14,7 @@
 - 카카오 API를 사용할 수 없는 경우, Naver 책검색 API로 대체해서 검색결과를 제공합니다.
   - API URL - https://developers.naver.com/docs/search/book/
 
-#### 어플리케이션 개발환경
+## 어플리케이션 개발환경
 
 - JDK: OpenJDK 11.0.2
 - 언어,프레임워크: SpringBoot 2.2.6
@@ -24,9 +23,8 @@
 - 빌드, 의존성 라이브러리 관리: gradle
 - Test Tool: JUnit5, Mokito
 
-------
 
-#### 외부 라이브러리
+## 외부 라이브러리
 
 - **lombok - 어노테이션기반 자동코드 지원**
 
@@ -74,9 +72,7 @@
     
     ```
 
-------
-
-### 어플리케이션 제공기능 
+## 어플리케이션 제공기능 
 
 모든 기능은 API를 통해 제공됩니다. 
 
@@ -100,7 +96,7 @@
 
 
 
-#### 프로젝트 실행 방법
+## 프로젝트 실행 방법
 
 - 프로젝트 빌드 및 실행
 
@@ -122,9 +118,7 @@
       ddl-auto: update
   ```
 
-------
-
-#### API 명세 및  테스트 방법
+## API 명세 및 테스트 방법
 
 제공되는 모든 API의 응답객체의 데이타형식은 JSON입니다. 
 
