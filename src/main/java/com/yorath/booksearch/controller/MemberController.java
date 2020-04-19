@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +46,7 @@ public class MemberController {
 
         // ID 중복확인
         if (memberService.findMember(joinMemberDto.getUserId()).isPresent()) {
-           throw new ServiceException(ApiResultStatus.MEMBER_ID_DUPLICATED, HttpStatus.BAD_REQUEST);
+            throw new ServiceException(ApiResultStatus.MEMBER_ID_DUPLICATED, HttpStatus.BAD_REQUEST);
         }
         String newUserId = memberService.registMember(joinMemberDto);
 
@@ -54,6 +55,13 @@ public class MemberController {
     }
 
 
+    /**
+     * 로그인
+     * 로그인이 성공하면 세션객체에 사용자장보를 저장한다.
+     *
+     * @param loginDto
+     * @return
+     */
     @PostMapping(value = "/login")
     public ResponseEntity<ApiResponseDto> login(@RequestBody @Valid LoginDto loginDto) {
 
@@ -74,5 +82,16 @@ public class MemberController {
 
         responseDto.setSuccess(null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    /**
+     * 세션정보를 반환
+     * 클라이언트에서 현재 세션이 유효한지 객체정보로 확인이 가능하다.
+     *
+     * @return
+     */
+    @GetMapping(value = "session")
+    public ResponseEntity<UserInfo> getSessionInfo() {
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 }

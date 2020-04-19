@@ -1,6 +1,8 @@
 package com.yorath.booksearch.controller;
 
 import com.yorath.booksearch.common.ApiResponseDto;
+import com.yorath.booksearch.common.ApiResultStatus;
+import com.yorath.booksearch.common.UserInfo;
 import com.yorath.booksearch.dto.KeywordSummeryDto;
 import com.yorath.booksearch.dto.MyBookSearchHistoryDto;
 import com.yorath.booksearch.service.BookSearchService;
@@ -15,12 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
 @RestController
 public class BookSearchController {
+
+    @Resource
+    private UserInfo userInfo;  // 세션객체
 
     final BookSearchService bookSearchService;
     final OpenApiService kakaoOpenApiService;
@@ -29,7 +35,7 @@ public class BookSearchController {
     public BookSearchController(@Qualifier("openApiKakaoServiceImpl") OpenApiService kakaoOpenApiService,
                                 @Qualifier("openApiNaverServiceImpl") OpenApiService naverOpenApiService,
                                 BookSearchService bookSearchService
-                                ) {
+    ) {
         this.bookSearchService = bookSearchService;
         this.kakaoOpenApiService = kakaoOpenApiService;
         this.naverOpenApiService = naverOpenApiService;
@@ -37,17 +43,26 @@ public class BookSearchController {
 
     /**
      * 책 검색
+     * 카카오 API 호출시 에러가 발생한 네이버 API로 대체한다.
+     *
      * @param keyword 검색 키워드
+     * @param page    페이지번호 기본값:1
+     * @param size    페이지당 검색건수 기본값: 10
      * @return
      */
-    @GetMapping(value = "/book/search/{userId}")
+    @GetMapping(value = "/book/search")
     public ResponseEntity<ApiResponseDto> getBookSearch(
-            @PathVariable String userId,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size,
-            @RequestParam(value = "keyword") @NotNull String keyword) {
+            @RequestParam(value = "keyword") @NotNull String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
 
         ApiResponseDto responseDto = new ApiResponseDto();
+        if (userInfo.getUserId() == null) {
+            responseDto.setStatus(ApiResultStatus.REQUEST_SESSION_EXPIRED);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+
         try {
             responseDto.setSuccess(kakaoOpenApiService.searchBook(keyword, page, size));
         } catch (RestClientException re) {
@@ -57,8 +72,8 @@ public class BookSearchController {
         }
 
         // 검색이력 저장(비동기 처리)
-        bookSearchService.saveMyBookSearchHistory(userId, keyword);
-        return ResponseEntity.ok(responseDto);
+        bookSearchService.saveMyBookSearchHistory(userInfo.getUserId(), keyword);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 
@@ -70,8 +85,16 @@ public class BookSearchController {
     public ResponseEntity<ApiResponseDto> getMyBookSearchHistories(@PathVariable String userId) {
 
         ApiResponseDto responseDto = new ApiResponseDto();
+        if (userInfo.getUserId() == null) {
+            responseDto.setStatus(ApiResultStatus.REQUEST_SESSION_EXPIRED);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        if (!userInfo.getUserId().equals(userId)) {
+            responseDto.setStatus(ApiResultStatus.REQUEST_PARAM_INVALID);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        }
 
-         List<MyBookSearchHistoryDto> historyDtoList =  bookSearchService.getMyBookSearchHistoryList(userId);
+        List<MyBookSearchHistoryDto> historyDtoList = bookSearchService.getMyBookSearchHistoryList(userId);
         responseDto.setSuccess(historyDtoList);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -85,8 +108,12 @@ public class BookSearchController {
     public ResponseEntity<ApiResponseDto> getTop10Keywords() {
 
         ApiResponseDto responseDto = new ApiResponseDto();
+        if (userInfo.getUserId() == null) {
+            responseDto.setStatus(ApiResultStatus.REQUEST_SESSION_EXPIRED);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
 
-        List<KeywordSummeryDto> historyDtoList =  bookSearchService.getTop10KeywordList();
+        List<KeywordSummeryDto> historyDtoList = bookSearchService.getTop10KeywordList();
         responseDto.setSuccess(historyDtoList);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
