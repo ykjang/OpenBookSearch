@@ -8,10 +8,10 @@ spring:
     name: open-book-search
   profiles:
     active: local
-
+# Session Setting
   session:
     store-type: jdbc
-    timeout: 600
+    timeout: 600  #seconds
     jdbc:
       initialize-schema: always
 ---

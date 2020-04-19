@@ -11,6 +11,7 @@ public enum ApiResultStatus {
     REQUEST_SUCCESS("S000", "정상적으로 처리되었습니다."),
 
     // E0xx - 공통예러
+    REQUEST_SESSION_EXPIRED("E000", "세션이 만료되었습다. 다시 로그인 하세요."),
     REQUEST_PARAM_INVALID("E001", "요청항목이 유효하지 않습니다."),
     REQUEST_METHOD_NOT_ALLOWED("E002", "지원하지 않는 메서드입니다."),
 
