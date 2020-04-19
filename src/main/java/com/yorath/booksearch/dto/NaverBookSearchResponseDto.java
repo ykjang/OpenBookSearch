@@ -31,8 +31,8 @@ public class NaverBookSearchResponseDto {
         private String isbn;
         private String pubdate;
         private String publisher;
-        private int discount;
-        private int price;
+        private double discount;
+        private double price;
         private String author;
         private String image;
         private String link;

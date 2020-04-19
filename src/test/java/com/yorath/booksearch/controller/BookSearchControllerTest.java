@@ -8,7 +8,6 @@ import com.yorath.booksearch.dto.BookSearchResponseDto;
 import com.yorath.booksearch.dto.MyBookSearchHistoryDto;
 import com.yorath.booksearch.service.BookSearchServiceImpl;
 import com.yorath.booksearch.service.OpenApiKakaoServiceImpl;
-import com.yorath.booksearch.service.OpenApiNaverServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,8 +41,6 @@ class BookSearchControllerTest {
     BookSearchServiceImpl bookSearchService;
     @Mock
     OpenApiKakaoServiceImpl openApiKakaoService;
-    @Mock
-    OpenApiNaverServiceImpl openApiNaverService;
 
     private MockMvc mockMvc;
 
@@ -89,7 +86,7 @@ class BookSearchControllerTest {
 
 
 
-        mockMvc.perform(get("/api/v1/book/search/" + userId)
+        mockMvc.perform(get("/book/search/" + userId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .queryParam("keyword", "JAVA")
                 .queryParam("page", "1")
@@ -118,7 +115,7 @@ class BookSearchControllerTest {
 
         // when
         MvcResult mvcResult = mockMvc.perform(
-                get("/api/v1/book/search/" + userId + "/histories")
+                get("/book/search/" + userId + "/histories")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
