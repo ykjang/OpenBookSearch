@@ -80,16 +80,21 @@
 
 모든 기능은 API를 통해 제공됩니다. 
 
-- 회원가입
+1. 회원가입
   - 아이디와 비밀번호를 통해 회원가입이 가능합니다.
-- 로그인
-- 책검색 기능 
+2. 로그인
+  - 가입한 아이디와 비밀번호로 로그인을 할 수 있습니다.
+  - 로그인이 성공하면 회원정보가 세션에 저장됩니다. 
+3. 책검색 기능 
+  - 로그인이 되어 있어야 사용이 가능합니다.
   - 키워드로 책 검색이 가능합니다. 
   - 검색결과는 페이징처리되어 제공됩니다.
-- 나의 책검색 히스토리 조회
+4. 나의 책검색 히스토리 조회
+  - 로그인이 되어 있어야 사용이 가능합니다.
   - 내가 검색한 이력을 조회할 수 있습니다.
   - 이력정보는 최신일자순으로 제공되며 검색일자와 검색키워드 정보를 보여줍니다.
-- 검색 키워드 TOP10 조회
+5. 검색 키워드 TOP10 조회
+  - 로그인이 되어 있어야 사용이 가능합니다.
   - 가장 많이 사용된 검색 키워드 TOP 10 을 조회할 수 있습니다.
   - 키워드와 검색횟수 정보를 제공합니다. 
 
@@ -186,29 +191,29 @@
     --data-raw '{ "user_id": "testuser1", "password": "password" }'
     ```
 
-  - 책검색 
+  - 책검색 (로그인 필수)
 
-    - userId - testuser1
+    - userId - 로그인 유저ID
     - keyword - 자바 
     - page - 1
     - size - 20
 
     ```shell
-    curl --location --request GET 'http://localhost:8081/api/v1/book/search/testuser1?keyword=%EC%9E%90%EB%B0%94%20&page=1&size=20' \
+    curl --location --request GET 'http://localhost:8081/api/v1/book/search?keyword=%EC%9E%90%EB%B0%94%20&page=1&size=20' \
     --header 'Content-Type: application/json'
     ```
 
-  - 나의 책검색 이력조회
+  - 나의 책검색 이력조회 (로그인 필수, URL의 회원ID Path는 로그인한 유저ID와 동일해야 함)
 
-    - userId - testuser1
+    - userId - 로그인 유저ID
     - 좀더 다양한 이력데이타를 조회하기 위해서는 책검색 API를 다른 키워드로 여러번 수행합니다. 
 
     ```shell
-    curl --location --request GET 'http://localhost:8081/api/v1/book/search/testuser1/histories' \
+    curl --location --request GET 'http://localhost:8081/api/v1/book/search/{userId}/histories' \
     --header 'Content-Type: application/json' 
     ```
 
-  - 검색 키워드 Top10 목록
+  - 검색 키워드 Top10 목록 (로그인 필수)
     - 좀더 다양한 키워드 목록을 조회하기 위해서는 책검색 API를 중복을 포함한 다양한 키워드로 여러번 수행합니다. 
 
     ```shell
