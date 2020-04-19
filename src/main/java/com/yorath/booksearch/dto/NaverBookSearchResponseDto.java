@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class NaverBookSearchResponseDto {
 
-    private int start;  //
+    private int start;  // 검색시적점 (페이지번호)
     private int total;  // 충 검색건수
-    private int display;
+    private int display;    // 페이지당 표시건수
     private String lastBuildDate;
 
     private List<Items> items = new ArrayList<>();
@@ -46,31 +46,46 @@ public class NaverBookSearchResponseDto {
     public BookSearchResponseDto toResponseDto() {
 
         // 책 상세정보 목록 매핑
-        List<BookSearchResponseDto.Documents> documents = this.getItems().stream().map(items -> {
-            return BookSearchResponseDto.Documents.builder()
-                    .title(items.getTitle())
-                    .authors(Arrays.asList(items.getAuthor()))
-                    .contents(items.getDescription())
-                    .url(items.getLink())
-                    .isbn(items.getIsbn())
-                    .publisher(items.getPublisher())
-                    .price(items.getPrice())
-                    .sale_price(items.getDiscount())
-                    .datetime(items.getPubdate())
-                    .thumbnail(items.getImage())
-                    .build();
-        }).collect(Collectors.toList());
+        List<BookSearchResponseDto.Documents> documents = this.getItems().stream().map(items -> BookSearchResponseDto.Documents.builder()
+                .title(items.getTitle())
+                .authors(Arrays.asList(items.getAuthor()))
+                .contents(items.getDescription())
+                .url(items.getLink())
+                .isbn(items.getIsbn())
+                .publisher(items.getPublisher())
+                .price(items.getPrice())
+                .sale_price(items.getDiscount())
+                .datetime(items.getPubdate())
+                .thumbnail(items.getImage())
+                .build()).collect(Collectors.toList());
+
         // 책 검색 페이징정보
         BookSearchResponseDto.Meta meta = BookSearchResponseDto.Meta.builder()
                 .total_count(this.getTotal())
                 .pageable_count(this.getDisplay())
-                .is_end(false)  // 문서의 끝
+                .is_end(isEnd())
                 .build();
 
         return BookSearchResponseDto.builder()
                 .meta(meta)
                 .documents(documents)
                 .build();
+    }
 
+    /**
+     * 검색페이지의 끝 여부 확인
+     *
+     * @return
+     */
+    private boolean isEnd() {
+
+        if( this.getTotal() == 0 || this.getDisplay() == 0) return true;
+        // 총페이지수 계산
+        int totalPageCount = this.getTotal()/this.getDisplay();
+
+        if (this.getTotal() % this.getDisplay() > 0) {
+            totalPageCount = totalPageCount + 1 ;
+        }
+        return this.start == totalPageCount;
     }
 }

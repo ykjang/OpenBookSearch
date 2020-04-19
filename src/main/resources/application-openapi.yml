@@ -1,0 +1,11 @@
+# Open API Information
+open-api:
+  kakao:
+    domain: https://dapi.kakao.com
+    app-key: 2fcfd0d6690256bb06d549f1bafb8c73
+    book-search-url: /v3/search/book
+  naver:
+    domain: https://openapi.naver.com
+    client-id: Dz3nhi0Tz3i_QJDOEF2O
+    client-secret: U6qerTT0GK
+    book-search-url: /v1/search/book.json

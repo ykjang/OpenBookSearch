@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -14,6 +17,7 @@ public class LoginDto {
 
     @NotBlank(message = "ID는 필수항목입니다.")
     private String userId;
+
     @NotBlank(message = "비밀번호는 필수항목입니다.")
     private String password;
 }

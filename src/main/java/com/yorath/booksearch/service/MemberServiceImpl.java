@@ -18,11 +18,22 @@ public class MemberServiceImpl implements MemberService {
         this.membersRepository = membersRepository;
     }
 
+    /**
+     * 회원정보 조회
+     * @param userId
+     * @return
+     * @throws RestClientException
+     */
     @Override
     public Optional<MemberDto> findMember(String userId) throws RestClientException {
         return membersRepository.findFirstByUserId(userId).map(members -> new MemberDto(members));
     }
 
+    /**
+     * 회원 등록 
+     * @param joinMemberDto
+     * @return
+     */
     @Transactional
     @Override
     public String registMember(JoinMemberDto joinMemberDto) {

@@ -2,10 +2,10 @@ package com.yorath.booksearch.service;
 
 import com.yorath.booksearch.common.ApiResultStatus;
 import com.yorath.booksearch.dto.BookSearchResponseDto;
+import com.yorath.booksearch.dto.NaverBookSearchResponseDto;
 import com.yorath.booksearch.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -18,23 +18,20 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class KakaoBookSearchServiceImpl implements BookSearchService {
+public class OpenApiKakaoServiceImpl implements OpenApiService {
 
-    /*
-    open-api:
-  kakao:
-    app-key: 2fcfd0d6690256bb06d549f1bafb8c73
-    book-search-url: https://dapi.kakao.com/v3/search/book
-     */
+    // Kakako API Env
     @Value("${open-api.kakao.app-key}")
     private String OPEN_API_KAKAO_APP_KEY;
     @Value("${open-api.kakao.book-search-url}")
-    private String OPEN_API_KAKAO_BOOKE_SEARCH_URL;
+    private String OPEN_API_KAKAO_BOOK_SEARCH_URL;
 
+    private static final int DEFAULT_START_PAGE = 1;    // 검색 사작페이지 번호
+    private static final int DEFAULT_PAGE_SIZE = 10;    // 퍼이지당 검색건수
 
-    private final RestTemplate restTemplate;
-    public KakaoBookSearchServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+    private final RestTemplate kakaoOpenApiRestTemplate;
+    public OpenApiKakaoServiceImpl(RestTemplate kakaoOpenApiRestTemplate) {
+        this.kakaoOpenApiRestTemplate = kakaoOpenApiRestTemplate;
     }
 
     /**
@@ -44,7 +41,7 @@ public class KakaoBookSearchServiceImpl implements BookSearchService {
      * @throws RestClientException
      */
     @Override
-    public BookSearchResponseDto searchBook(String keyword) throws RestClientException{
+    public BookSearchResponseDto searchBook(String keyword, int page, int size) throws RestClientException{
 
         // Header Setting
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -52,24 +49,26 @@ public class KakaoBookSearchServiceImpl implements BookSearchService {
         httpHeaders.set("Authorization", "KakaoAK " + OPEN_API_KAKAO_APP_KEY );
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(httpHeaders);
 
-        // Request Param Setting TODO: 한글 인코딩문제 확인(한글 검색안됨)
-        String encKeyword =  URLEncoder.encode(keyword, StandardCharsets.UTF_8);
-        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(OPEN_API_KAKAO_BOOKE_SEARCH_URL)
-                .queryParam("query", encKeyword);
+        // Request Param Setting
+        if(page == 0) page = DEFAULT_START_PAGE;
+        if(size == 0) size = DEFAULT_PAGE_SIZE;
+
+        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromUriString(OPEN_API_KAKAO_BOOK_SEARCH_URL)
+                .queryParam("query", keyword).encode(StandardCharsets.ISO_8859_1)
+                .queryParam("page", page)
+                .queryParam("size", size);
         log.debug("[Request URL]{}", urlBuilder.toUriString());
 
         // API Call
-        ResponseEntity<BookSearchResponseDto> responseEntity = restTemplate.exchange(urlBuilder.toUriString(), HttpMethod.GET, requestEntity, BookSearchResponseDto.class);
+        ResponseEntity<BookSearchResponseDto> responseEntity = kakaoOpenApiRestTemplate.exchange(urlBuilder.toUriString(), HttpMethod.GET, requestEntity, BookSearchResponseDto.class);
 
         if (responseEntity.getStatusCode().isError()) {
-            log.debug("네이버 책검색 API 호출에 실패앴습니다");
-            // TODO: 예외처리
-            throw new ServiceException(ApiResultStatus.INTERNAL_SERVER_ERROR);
+            log.debug("카카오 책검색 API 호출에 실패, 네이버 API로 전환");
+            throw new RestClientException(responseEntity.getStatusCode().name());
         }
 
         return responseEntity.getBody();
 
     }
-
 
 }

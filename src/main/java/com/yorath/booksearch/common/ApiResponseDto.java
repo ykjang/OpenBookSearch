@@ -24,8 +24,8 @@ public class ApiResponseDto<D> {
     }
 
     public void setSuccess(@Nullable D data) {
-        this.code = ApiResultStatus.SUCCESS_REQUEST.getCode();
-        this.message = ApiResultStatus.SUCCESS_REQUEST.getMessage();
+        this.code = ApiResultStatus.REQUEST_SUCCESS.getCode();
+        this.message = ApiResultStatus.REQUEST_SUCCESS.getMessage();
         this.data = data;
     }
 }

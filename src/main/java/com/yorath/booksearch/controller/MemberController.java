@@ -3,6 +3,7 @@ package com.yorath.booksearch.controller;
 
 import com.yorath.booksearch.common.ApiResponseDto;
 import com.yorath.booksearch.common.ApiResultStatus;
+import com.yorath.booksearch.common.UserInfo;
 import com.yorath.booksearch.dto.JoinMemberDto;
 import com.yorath.booksearch.dto.LoginDto;
 import com.yorath.booksearch.dto.MemberDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Slf4j
@@ -24,8 +26,11 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1")
 public class MemberController {
 
-    private final MemberService memberService;
 
+    @Resource
+    private UserInfo userInfo;
+
+    private final MemberService memberService;
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
@@ -37,12 +42,12 @@ public class MemberController {
      * @return
      */
     @PostMapping(value = "/member")
-    public ResponseEntity<ApiResponseDto> joinMember(@RequestBody @Valid JoinMemberDto joinMemberDto) {
+    public ResponseEntity<ApiResponseDto> joinMember(@RequestBody @Valid final JoinMemberDto joinMemberDto) {
         ApiResponseDto responseDto = new ApiResponseDto();
 
         // ID 중복확인
         if (memberService.findMember(joinMemberDto.getUserId()).isPresent()) {
-            throw new ServiceException(ApiResultStatus.MEMBER_ID_DUPLICATED);
+           throw new ServiceException(ApiResultStatus.MEMBER_ID_DUPLICATED, HttpStatus.BAD_REQUEST);
         }
         String newUserId = memberService.registMember(joinMemberDto);
 
@@ -58,13 +63,16 @@ public class MemberController {
 
         // 등록된 유저가 없는 경우
         MemberDto memberDto = memberService.findMember(loginDto.getUserId())
-                .orElseThrow(() -> new ServiceException(ApiResultStatus.MEMBER_ID_NOT_EXIST));
+                .orElseThrow(() -> new ServiceException(ApiResultStatus.MEMBER_ID_NOT_EXIST, HttpStatus.NOT_FOUND));
 
         // 패스워드 체크
         if (BCrypt.checkpw(loginDto.getPassword(), memberDto.getPassword()) == false) {
             log.error("ErrorMessage:{}", ApiResultStatus.LOGIN_PASSWORD_INVALID.getMessage());
-            throw new ServiceException(ApiResultStatus.LOGIN_PASSWORD_INVALID);
+            throw new ServiceException(ApiResultStatus.LOGIN_PASSWORD_INVALID, HttpStatus.BAD_REQUEST);
         }
+
+        // 세션등록
+        userInfo.setUserId(loginDto.getUserId());
 
         responseDto.setSuccess(null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

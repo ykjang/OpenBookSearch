@@ -25,11 +25,13 @@ class OpenApiServiceTest {
     OpenApiService naverOpenApiService;
 
     String keyword;
-    int page=1, size=10;
+    int page, size;
 
     @BeforeEach
-    void initTest() {
+    void setUp() {
         keyword = "자바";
+        page = 1;
+        size = 10;
     }
 
     @Test
