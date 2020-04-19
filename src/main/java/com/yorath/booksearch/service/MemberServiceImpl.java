@@ -1,6 +1,5 @@
 package com.yorath.booksearch.service;
 
-import com.yorath.booksearch.domain.Members;
 import com.yorath.booksearch.domain.repository.MembersRepository;
 import com.yorath.booksearch.dto.JoinMemberDto;
 import com.yorath.booksearch.dto.MemberDto;
@@ -26,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public Optional<MemberDto> findMember(String userId) throws RestClientException {
-        return membersRepository.findFirstByUserId(userId).map(members -> new MemberDto(members));
+        return membersRepository.findFirstByUserId(userId).map(MemberDto::new);
     }
 
     /**

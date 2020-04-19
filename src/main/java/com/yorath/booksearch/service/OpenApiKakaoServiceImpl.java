@@ -1,9 +1,6 @@
 package com.yorath.booksearch.service;
 
-import com.yorath.booksearch.common.ApiResultStatus;
 import com.yorath.booksearch.dto.BookSearchResponseDto;
-import com.yorath.booksearch.dto.NaverBookSearchResponseDto;
-import com.yorath.booksearch.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -12,7 +9,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 

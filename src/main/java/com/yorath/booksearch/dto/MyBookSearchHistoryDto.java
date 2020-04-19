@@ -2,7 +2,6 @@ package com.yorath.booksearch.dto;
 
 
 import com.yorath.booksearch.domain.BookSearchHistory;
-import com.yorath.booksearch.domain.Members;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
